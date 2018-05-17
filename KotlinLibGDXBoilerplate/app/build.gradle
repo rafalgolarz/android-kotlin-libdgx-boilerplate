@@ -1,0 +1,100 @@
+apply plugin: 'com.android.application'
+
+apply plugin: 'kotlin-android'
+
+apply plugin: 'kotlin-android-extensions'
+
+ext {
+    gdxVersion = '1.9.8'
+    roboVMVersion = '2.3.3'
+    box2DLightsVersion = '1.4'
+    ashleyVersion = '1.7.3'
+    aiVersion = '1.8.1'
+}
+
+android {
+    compileSdkVersion 27
+    defaultConfig {
+        applicationId "com.golarz.rafal.libgdxtest"
+        minSdkVersion 21
+        targetSdkVersion 27
+        versionCode 1
+        versionName "1.0"
+        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+    }
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+}
+
+configurations { natives }
+
+
+dependencies {
+    implementation fileTree(include: ['*.jar'], dir: 'libs')
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
+    implementation 'com.android.support:appcompat-v7:27.1.1'
+    implementation 'com.android.support.constraint:constraint-layout:1.1.0'
+    testImplementation 'junit:junit:4.12'
+    androidTestImplementation 'com.android.support.test:runner:1.0.2'
+    androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
+    implementation "com.badlogicgames.gdx:gdx-backend-android:$gdxVersion"
+    natives "com.badlogicgames.gdx:gdx-platform:$gdxVersion:natives-armeabi"
+    natives "com.badlogicgames.gdx:gdx-platform:$gdxVersion:natives-armeabi-v7a"
+    natives "com.badlogicgames.gdx:gdx-platform:$gdxVersion:natives-arm64-v8a"
+    natives "com.badlogicgames.gdx:gdx-platform:$gdxVersion:natives-x86"
+    natives "com.badlogicgames.gdx:gdx-platform:$gdxVersion:natives-x86_64"
+    implementation "com.badlogicgames.gdx:gdx-box2d:$gdxVersion"
+    natives "com.badlogicgames.gdx:gdx-box2d-platform:$gdxVersion:natives-armeabi"
+    natives "com.badlogicgames.gdx:gdx-box2d-platform:$gdxVersion:natives-armeabi-v7a"
+    natives "com.badlogicgames.gdx:gdx-box2d-platform:$gdxVersion:natives-arm64-v8a"
+    natives "com.badlogicgames.gdx:gdx-box2d-platform:$gdxVersion:natives-x86"
+    natives "com.badlogicgames.gdx:gdx-box2d-platform:$gdxVersion:natives-x86_64"
+    implementation "com.badlogicgames.gdx:gdx-controllers:$gdxVersion"
+    implementation "com.badlogicgames.gdx:gdx-controllers-android:$gdxVersion"
+    implementation "com.badlogicgames.gdx:gdx-ai:$aiVersion"
+    implementation "com.badlogicgames.ashley:ashley:$ashleyVersion"
+    implementation "com.badlogicgames.gdx:gdx-freetype:$gdxVersion"
+    natives "com.badlogicgames.gdx:gdx-freetype-platform:$gdxVersion:natives-armeabi"
+    natives "com.badlogicgames.gdx:gdx-freetype-platform:$gdxVersion:natives-armeabi-v7a"
+    natives "com.badlogicgames.gdx:gdx-freetype-platform:$gdxVersion:natives-arm64-v8a"
+    natives "com.badlogicgames.gdx:gdx-freetype-platform:$gdxVersion:natives-x86"
+    natives "com.badlogicgames.gdx:gdx-freetype-platform:$gdxVersion:natives-x86_64"
+    implementation "com.badlogicgames.gdx:gdx-bullet:$gdxVersion"
+    natives "com.badlogicgames.gdx:gdx-bullet-platform:$gdxVersion:natives-armeabi"
+    natives "com.badlogicgames.gdx:gdx-bullet-platform:$gdxVersion:natives-armeabi-v7a"
+    natives "com.badlogicgames.gdx:gdx-bullet-platform:$gdxVersion:natives-arm64-v8a"
+    natives "com.badlogicgames.gdx:gdx-bullet-platform:$gdxVersion:natives-x86"
+    natives "com.badlogicgames.gdx:gdx-bullet-platform:$gdxVersion:natives-x86_64"
+    implementation "com.badlogicgames.box2dlights:box2dlights:$box2DLightsVersion"
+}
+
+// called every time gradle gets executed, takes the native dependencies of
+// the natives configuration, and extracts them to the proper libs/ folders
+// so they get packed with the APK.
+task copyAndroidNatives() {
+    file("libs/armeabi/").mkdirs()
+    file("libs/armeabi-v7a/").mkdirs()
+    file("libs/arm64-v8a/").mkdirs()
+    file("libs/x86_64/").mkdirs()
+    file("libs/x86/").mkdirs()
+
+    configurations.natives.files.each { jar ->
+        def outputDir = null
+        if(jar.name.endsWith("natives-arm64-v8a.jar")) outputDir = file("libs/arm64-v8a")
+        if(jar.name.endsWith("natives-armeabi-v7a.jar")) outputDir = file("libs/armeabi-v7a")
+        if(jar.name.endsWith("natives-armeabi.jar")) outputDir = file("libs/armeabi")
+        if(jar.name.endsWith("natives-x86_64.jar")) outputDir = file("libs/x86_64")
+        if(jar.name.endsWith("natives-x86.jar")) outputDir = file("libs/x86")
+        if(outputDir != null) {
+            copy {
+                from zipTree(jar)
+                into outputDir
+                include "*.so"
+            }
+        }
+    }
+}
