@@ -28,10 +28,15 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
+
+    sourceSets {
+        main {
+            jniLibs.srcDirs = ['libs']
+        }
+    }
 }
 
 configurations { natives }
-
 
 dependencies {
     implementation fileTree(include: ['*.jar'], dir: 'libs')

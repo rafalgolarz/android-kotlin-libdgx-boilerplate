@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">Kotlin LibGDX Boilerplate</string>
+    <string name="launch_libgdx">LAUNCH LIBGDX</string>
 </resources>

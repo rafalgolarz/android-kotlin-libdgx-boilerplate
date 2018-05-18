@@ -1,3 +1,5 @@
+### Android + Kotlin + libGDX
+
 A boilerplace of Android (Kotlin) integration with libGDX.
 
 At the point of creating this code, libGDX nighty build (1.9.8) fails when selecting Kotlin as the primary language.
@@ -8,3 +10,9 @@ The example here solves that issues by extending a new project (blank Activity) 
 The whole process is also described at my blog: 
 
 http://rafalgolarz.com/blog/2018/05/17/add_libgdx_to_existing_android_kotlin_project/
+
+### Demo
+
+Some simple demo of text transition is added to verify the setup:
+
+![demo](http://rafalgolarz.com/img/posts/demo.gif)
