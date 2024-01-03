@@ -37,6 +37,5 @@ class LibGdxDemo : ApplicationAdapter() {
 
     override fun dispose() {
         batch.dispose()
-        img.dispose()
     }
 }
